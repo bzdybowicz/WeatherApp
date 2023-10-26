@@ -23,7 +23,7 @@ final class LocationServiceTests: XCTestCase {
             CLLocation(latitude: 30.1, longitude: 40.1),
             CLLocation(latitude: 30.3, longitude: 40.6)
         ]
-        var results: [CLLocation] = []
+        var results: [CLLocation?] = []
         sut
             .locationPublisher
             .sink(receiveValue: {

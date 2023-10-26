@@ -14,7 +14,7 @@ enum TestError: Error {
 
 final class WeatherServiceTests: XCTestCase {
 
-    private let response = WeatherResponse()
+    private let response = WeatherResponse(coord: LocationResponse(lon: <#T##Double?#>, lat: <#T##Double?#>), main: <#T##WeatherMainResponse?#>)
 
     func testFetchWeatherError() async throws {
         let sessionMock = URLSessionMock(error: TestError.sample)
