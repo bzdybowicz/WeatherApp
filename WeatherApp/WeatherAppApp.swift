@@ -16,7 +16,8 @@ struct WeatherAppApp: App {
     var body: some Scene {
         WindowGroup {
             CurrentWeatherView(viewModel: CurrentWeatherViewModel(locationService: serviceFactory.locationService,
-                                                                  weatherService: serviceFactory.weatherService))
+                                                                  weatherService: serviceFactory.weatherService,
+                                                                  measurementFormatter: MeasurementFormatter.formatter))
         }
     }
 }

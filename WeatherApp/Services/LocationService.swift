@@ -35,7 +35,7 @@ final class LocationService: NSObject, LocationServiceProtocol {
 
     func start() {
         clLocationManager.requestWhenInUseAuthorization()
-        clLocationManager.startUpdatingLocation()
+        clLocationManager.startMonitoringSignificantLocationChanges()
     }
 }
 

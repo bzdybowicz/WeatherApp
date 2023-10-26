@@ -8,12 +8,14 @@
 import Foundation
 
 enum ServiceError: Error {
-    case invalidUrl
+    case urlCreationFailure
     case requestFailure
 }
 
 protocol WeatherServiceProtocol {
-    func fetchWeather() async throws -> WeatherResponse
+    func fetchWeather(lat: Double,
+                      lon: Double,
+                      unit: String) async throws -> WeatherResponse
 }
 
 struct WeatherService: WeatherServiceProtocol {
@@ -30,8 +32,16 @@ struct WeatherService: WeatherServiceProtocol {
         self.decoder = decoder
     }
 
-    func fetchWeather() async throws -> WeatherResponse {
-        let urlRequest = URLRequest(url: try environment.remoteUrl)
+    func fetchWeather(lat: Double,
+                      lon: Double,
+                      unit: String) async throws -> WeatherResponse {
+        var urlComponents = URLComponents(string: environment.baseUrlString)
+        urlComponents?.queryItems = [URLQueryItem(name: "lat", value: String(lat)),
+                                     URLQueryItem(name: "lon", value: String(lon)),
+                                     URLQueryItem(name: "appId", value: String(environment.apiKey)),
+                                     URLQueryItem(name: "units", value: unit)]
+        guard let url = urlComponents?.url else { throw ServiceError.urlCreationFailure }
+        let urlRequest = URLRequest(url: url)
         let response = try await urlSession.data(for: urlRequest)
         return try decoder.decode(WeatherResponse.self, from: response.0)
     }

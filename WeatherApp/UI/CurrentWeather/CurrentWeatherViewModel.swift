@@ -12,28 +12,41 @@ import Foundation
 @MainActor
 final class CurrentWeatherViewModel: CurrentWeatherViewModelProtocol {
 
-    @Published var locationName: String = ""
+    @Published var titleText: String = "currentWeather.title".localized
     @Published var temperature: String = ""
-    @Published var details: String = ""
-    @Published var minMax: String = ""
 
     private let locationService: LocationServiceProtocol
     private let weatherService: WeatherServiceProtocol
+    private let measurementFormatter: MeasurementFormatter
+    private let locale: LocaleProvider
+    private let notificationCenter: NotificationCenter
 
+    private var lastLocation: CLLocation?
+    private var lastSuccessfullyFetchedLocation: CLLocation?
     private var userSelectedLocation: CLLocation?
+    private var currentTask: Task<(), Error>?
     private var cancellables: Set<AnyCancellable> = []
+    private var timerCancellable: Cancellable?
 
     init(locationService: LocationServiceProtocol,
-         weatherService: WeatherServiceProtocol) {
+         weatherService: WeatherServiceProtocol,
+         measurementFormatter: MeasurementFormatter,
+         notificationCenter: NotificationCenter = .default,
+         locale: LocaleProvider = Locale.autoupdatingCurrent) {
         self.locationService = locationService
         self.weatherService = weatherService
-        bind()
+        self.measurementFormatter = measurementFormatter
+        self.notificationCenter = notificationCenter
+        self.locale = locale
+        bindLocation()
+        bindLocale()
+        restartAndBindTimer()
     }
 }
 
 private extension CurrentWeatherViewModel {
 
-    private func bind() {
+    private func bindLocation() {
         locationService
             .locationPublisher
             .sink(receiveCompletion: { [weak self] completion in
@@ -51,24 +64,80 @@ private extension CurrentWeatherViewModel {
         locationService.start()
     }
 
+    private func bindLocale() {
+        notificationCenter
+            .publisher(for: NSLocale.currentLocaleDidChangeNotification)
+            .sink(receiveValue: { [weak self] notification in
+                if let location = self?.lastLocation {
+                    self?.requestWeather(for: location)
+                }
+            })
+            .store(in: &cancellables)
+    }
+
+
+    private func restartAndBindTimer() {
+        let currentTimePublisher = Timer.TimerPublisher(interval: 60, runLoop: .main, mode: .default)
+        timerCancellable?.cancel()
+        timerCancellable = currentTimePublisher
+            .autoconnect()
+            .sink(receiveValue: { [weak self] value in
+                if let location = self?.lastLocation {
+                    self?.requestWeather(for: location)
+                }
+            })
+    }
+
     private func handleError(error: Error) {
 
     }
 
     private func handleNewLocation(location: CLLocation?) {
-        guard userSelectedLocation == nil else { return }
+        guard lastLocation != location else {
+            return
+        }
+        lastLocation = location
+        guard userSelectedLocation == nil,
+              let requestLocation = lastLocation,
+              requestLocation.isLonAndLatDifferent(than: lastSuccessfullyFetchedLocation) else { return }
+        requestWeather(for: requestLocation)
+    }
 
-        Task.detached(operation: { [weak self] in
-            let weatherResponse = try await self?.fetchWeather()
+    private func requestWeather(for location: CLLocation) {
+        let requestLocale = locale
+        let unit = locale.measurementString
+        currentTask?.cancel()
+        currentTask = Task(operation: { [weak self] in
+            let weatherResponse = try await self?.weatherService.fetchWeather(lat: location.coordinate.latitude,
+                                                                              lon: location.coordinate.longitude,
+                                                                              unit: unit)
+            if Task.isCancelled {
+                return
+            }
+            if weatherResponse != nil {
+                self?.lastSuccessfullyFetchedLocation = location
+            }
+            self?.restartAndBindTimer()
+            self?.handleResponse(weatherResponse: weatherResponse, localeProvider: requestLocale)
         })
     }
 
-    private func fetchWeather() async throws -> WeatherResponse? {
-        try await weatherService.fetchWeather()
+    private func handleResponse(weatherResponse: WeatherResponse?,
+                                localeProvider: LocaleProvider) {
+        guard let weatherResponse else { return }
+
+        let value = weatherResponse.main?.temp
+        let unit = localeProvider.temperatureUnit
+        let measurement = Measurement(value: value ?? 0, unit: unit)
+        temperature = measurementFormatter.string(from: measurement)
     }
+}
 
-    private func handleResponse() {
 
+extension CLLocation {
+    func isLonAndLatDifferent(than other: CLLocation?) -> Bool {
+        guard let other else { return true }
+        let value = coordinate.latitude == other.coordinate.latitude && coordinate.longitude == other.coordinate.longitude
+        return !value
     }
-
 }

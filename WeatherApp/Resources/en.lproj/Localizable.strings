@@ -1,0 +1,12 @@
+/* 
+  Localizable.strings
+  WeatherApp
+
+  Created by Bartlomiej Zdybowicz on 26/10/2023.
+  
+*/
+
+"currentWeather.title" = "Current temperature";
+"currentWeather.default.description" = "Presenting temperature for current user location";
+"currentWeather.customLocationButton.title" = "Select location";
+"currentWeather.networkError.message" = "Obtaining weather is temporarily not possible. Try again later.";

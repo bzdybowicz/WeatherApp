@@ -9,8 +9,6 @@ import Foundation
 
 @MainActor
 protocol CurrentWeatherViewModelProtocol: ObservableObject {
-    var locationName: String { get }
+    var titleText: String { get }
     var temperature: String { get }
-    var details: String { get }
-    var minMax: String { get }
 }

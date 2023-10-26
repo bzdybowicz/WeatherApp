@@ -22,8 +22,13 @@ enum BackendEnvironment {
             if let url = URL(string: baseUrlString) {
                 return url
             } else {
-                throw ServiceError.invalidUrl
+                throw ServiceError.urlCreationFailure
             }
         }
+    }
+
+    // Storing api keys in source code is not secure. This is just convenience shortcut given the purpose of this app.
+    var apiKey: String {
+        "6654cf8df59efce3c4f7638b8587a72e"
     }
 }
