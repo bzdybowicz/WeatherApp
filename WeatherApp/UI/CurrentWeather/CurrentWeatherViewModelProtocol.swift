@@ -12,4 +12,12 @@ protocol CurrentWeatherViewModelProtocol: ObservableObject {
     var titleText: String { get }
     var temperature: String { get }
     var errorMessage: String { get }
+    var isAlertPresented: Bool { get set }
+    var apiKey: String { get set }
+
+    var apiAlertTitle: String { get }
+    var apiAlertDescription: String { get }
+    var apiAlertOk: String { get }
+
+    func apiKeyUpdatedAction()
 }

@@ -12,15 +12,21 @@ import Foundation
 @MainActor
 final class CurrentWeatherViewModel: CurrentWeatherViewModelProtocol {
 
-    @Published var titleText: String = "currentWeather.title".localized
+    let titleText: String = L10n.CurrentWeather.title
+    let apiAlertTitle: String = L10n.CurrentWeather.KeyAlert.title
+    let apiAlertDescription: String = L10n.CurrentWeather.KeyAlert.description
+    let apiAlertOk: String = L10n.CurrentWeather.KeyAlert.confirmText
     @Published var temperature: String = ""
     @Published var errorMessage: String = ""
+    @Published var apiKey: String = ""
+    @Published var isAlertPresented: Bool = false
 
     private let locationService: LocationServiceProtocol
     private let weatherService: WeatherServiceProtocol
     private let measurementFormatter: MeasurementFormatterProtocol
     private let locale: LocaleProvider
     private let notificationCenter: NotificationCenter
+    private let apiKeyStorage: ApiKeyStorageProtocol
 
     private var lastLocation: CLLocation?
     private var lastSuccessfullyFetchedLocation: CLLocation?
@@ -32,20 +38,37 @@ final class CurrentWeatherViewModel: CurrentWeatherViewModelProtocol {
     init(locationService: LocationServiceProtocol,
          weatherService: WeatherServiceProtocol,
          measurementFormatter: MeasurementFormatterProtocol,
+         apiKeyStorage: ApiKeyStorageProtocol,
          notificationCenter: NotificationCenter = .default,
          locale: LocaleProvider = Locale.autoupdatingCurrent) {
         self.locationService = locationService
         self.weatherService = weatherService
         self.measurementFormatter = measurementFormatter
+        self.apiKeyStorage = apiKeyStorage
         self.notificationCenter = notificationCenter
         self.locale = locale
+        bindApiKey()
         bindLocation()
         bindLocale()
         restartAndBindTimer()
     }
+
+    func apiKeyUpdatedAction() {
+        if let location = lastLocation {
+            requestWeather(for: location)
+            if !apiKey.isEmpty {
+                try? apiKeyStorage.saveApiKey(apiKey)
+            }
+        }
+    }
 }
 
 private extension CurrentWeatherViewModel {
+
+    private func bindApiKey() {
+        apiKey = (try? apiKeyStorage.getKey()) ?? apiKey
+        isAlertPresented = apiKey.isEmpty
+    }
 
     private func bindLocation() {
         locationService
@@ -92,9 +115,9 @@ private extension CurrentWeatherViewModel {
     private func handleLocationError(error: LocationError) {
         switch error {
         case .unknown:
-            errorMessage = "currentWeather.locationErrro.message".localized
+            errorMessage = L10n.CurrentWeather.LocationError.message
         case .userDeclined:
-            errorMessage = "currentWeather.locationDisabled.message".localized
+            errorMessage = L10n.CurrentWeather.LocationDisabled.message
         }
         temperature = "-"
     }
@@ -115,28 +138,30 @@ private extension CurrentWeatherViewModel {
         let unit = locale.measurementString
         currentTask?.cancel()
         currentTask = Task(operation: { [weak self] in
+            guard let self = self else { return }
             var weatherResponse: WeatherResponse?
             do {
-                weatherResponse = try await self?.weatherService.fetchWeather(lat: location.coordinate.latitude,
-                                                                              lon: location.coordinate.longitude,
-                                                                              unit: unit)
+                weatherResponse = try await self.weatherService.fetchWeather(lat: location.coordinate.latitude,
+                                                                             lon: location.coordinate.longitude,
+                                                                             apiKey: self.apiKey,
+                                                                             unit: unit)
             } catch {
-                self?.handleServiceError()
+                self.handleServiceError()
             }
             if Task.isCancelled {
                 return
             }
             if weatherResponse != nil {
-                self?.lastSuccessfullyFetchedLocation = location
+                self.lastSuccessfullyFetchedLocation = location
             }
-            self?.restartAndBindTimer()
-            self?.handleResponse(weatherResponse: weatherResponse, localeProvider: requestLocale)
+            self.restartAndBindTimer()
+            self.handleResponse(weatherResponse: weatherResponse, localeProvider: requestLocale)
         })
     }
 
     private func handleServiceError() {
         temperature = "-"
-        errorMessage = "currentWeather.networkError.message".localized
+        errorMessage = L10n.CurrentWeather.NetworkError.message
     }
 
     private func handleResponse(weatherResponse: WeatherResponse?,

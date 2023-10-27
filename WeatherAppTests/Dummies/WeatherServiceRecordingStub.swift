@@ -11,9 +11,16 @@ enum WeatherServiceTestError: Error {
     case testSampleError
 }
 
+struct TestWeatherServiceInput: Equatable {
+    let lat: Double
+    let lon: Double
+    let apiKey: String
+    let unit: String
+}
+
 final class WeatherServiceRecordingStub: WeatherServiceProtocol {
 
-    private (set) var recordedCalls: [(lat: Double, lon: Double, unit: String)] = []
+    private (set) var recordedCalls: [TestWeatherServiceInput] = []
 
     private let responses: [WeatherResponse]
     private var responseIterator = 0
@@ -22,7 +29,8 @@ final class WeatherServiceRecordingStub: WeatherServiceProtocol {
         self.responses = responses
     }
 
-    func fetchWeather(lat: Double, lon: Double, unit: String) async throws -> WeatherResponse {
+    func fetchWeather(lat: Double, lon: Double, apiKey: String, unit: String) async throws -> WeatherResponse {
+        recordedCalls.append(TestWeatherServiceInput(lat: lat, lon: lon, apiKey: apiKey, unit: unit))
         if responses.isEmpty {
             throw WeatherServiceTestError.testSampleError
         }

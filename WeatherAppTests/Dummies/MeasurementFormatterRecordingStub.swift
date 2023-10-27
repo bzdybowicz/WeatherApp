@@ -20,6 +20,9 @@ final class MeasurementFormatterRecordingStub: MeasurementFormatterProtocol {
     }
 
     func string(from measurement: Measurement<Unit>) -> String {
+        if returnValues.isEmpty {
+            return ""
+        }
         if returnValueIterator == returnValues.count {
             returnValueIterator = 0
         }

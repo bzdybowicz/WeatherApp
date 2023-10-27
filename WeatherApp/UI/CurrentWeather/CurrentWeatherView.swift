@@ -22,6 +22,16 @@ struct CurrentWeatherView<ViewModel: CurrentWeatherViewModelProtocol>: View {
                 .multilineTextAlignment(.center)
                 .foregroundColor(.red)
         }
+        .alert(viewModel.apiAlertTitle, isPresented: $viewModel.isAlertPresented) {
+            TextField(viewModel.apiAlertTitle, text: $viewModel.apiKey)
+            Button(viewModel.apiAlertOk, action: {
+                viewModel.isAlertPresented.toggle()
+                viewModel.apiKeyUpdatedAction()
+            })
+        } message: {
+            Text(viewModel.apiAlertDescription)
+        }
         .padding(EdgeInsets(top: 30, leading: 20, bottom: 30, trailing: 20))
     }
+
 }

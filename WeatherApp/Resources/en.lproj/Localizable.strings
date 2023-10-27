@@ -12,3 +12,7 @@
 "currentWeather.networkError.message" = "Cannot fetch weather. Try again later.";
 "currentWeather.locationError.message" = "Location cannot be obtained. Try again later.";
 "currentWeather.locationDisabled.message" = "You need to enable location services in system settings";
+
+"currentWeather.keyAlert.title" = "Enter your open weather api key";
+"currentWeather.keyAlert.confirmText" = "Ok";
+"currentWeather.keyAlert.description" = "It is inconvenient, but since this is secret, it is necessarily. Once it is done, you will not have to do it again.";

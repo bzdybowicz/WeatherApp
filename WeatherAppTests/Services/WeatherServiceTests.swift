@@ -27,12 +27,12 @@ final class WeatherServiceTests: XCTestCase {
         let decoderStub = JSONDecoderRecordingStub(decoded: response)
         let sut = WeatherService(urlSession: sessionStub, environment: .production, decoder: decoderStub)
         do {
-            _ = try await sut.fetchWeather(lat: 10, lon: 10, unit: "metric")
+            _ = try await sut.fetchWeather(lat: 10, lon: 10, apiKey: "key", unit: "metric")
             XCTFail("Unexpected success")
         } catch let error {
             XCTAssertEqual(error as? TestError, TestError.sample)
         }
-        XCTAssertEqual(sessionStub.recordedRequest?.url?.absoluteString, "https://api.openweathermap.org/data/2.5/weather?lat=10.0&lon=10.0&appId=6654cf8df59efce3c4f7638b8587a72e&units=metric")
+        XCTAssertEqual(sessionStub.recordedRequest?.url?.absoluteString, "https://api.openweathermap.org/data/2.5/weather?lat=10.0&lon=10.0&appId=key&units=metric")
         XCTAssertEqual(decoderStub.recordedData, nil)
     }
 
@@ -42,12 +42,12 @@ final class WeatherServiceTests: XCTestCase {
         let sut = WeatherService(urlSession: sessionStub, environment: .production, decoder: decoderStub)
         var weatherResponse: WeatherResponse?
         do {
-            weatherResponse = try await sut.fetchWeather(lat: 10, lon: 10, unit: "metric")
+            weatherResponse = try await sut.fetchWeather(lat: 10, lon: 10, apiKey: "key", unit: "metric")
         } catch let error {
             XCTFail("Unexpected error \(error)")
         }
         XCTAssertEqual(weatherResponse, response)
-        XCTAssertEqual(sessionStub.recordedRequest?.url?.absoluteString, "https://api.openweathermap.org/data/2.5/weather?lat=10.0&lon=10.0&appId=6654cf8df59efce3c4f7638b8587a72e&units=metric")
+        XCTAssertEqual(sessionStub.recordedRequest?.url?.absoluteString, "https://api.openweathermap.org/data/2.5/weather?lat=10.0&lon=10.0&appId=key&units=metric")
         XCTAssertEqual(decoderStub.recordedData, try JSONEncoder().encode(response))
     }
 

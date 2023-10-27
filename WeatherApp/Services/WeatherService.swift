@@ -15,6 +15,7 @@ enum ServiceError: Error {
 protocol WeatherServiceProtocol {
     func fetchWeather(lat: Double,
                       lon: Double,
+                      apiKey: String,
                       unit: String) async throws -> WeatherResponse
 }
 
@@ -34,11 +35,12 @@ struct WeatherService: WeatherServiceProtocol {
 
     func fetchWeather(lat: Double,
                       lon: Double,
+                      apiKey: String,
                       unit: String) async throws -> WeatherResponse {
         var urlComponents = URLComponents(string: environment.baseUrlString)
         urlComponents?.queryItems = [URLQueryItem(name: "lat", value: String(lat)),
                                      URLQueryItem(name: "lon", value: String(lon)),
-                                     URLQueryItem(name: "appId", value: String(environment.apiKey)),
+                                     URLQueryItem(name: "appId", value: apiKey),
                                      URLQueryItem(name: "units", value: unit)]
         guard let url = urlComponents?.url else { throw ServiceError.urlCreationFailure }
         let urlRequest = URLRequest(url: url)
