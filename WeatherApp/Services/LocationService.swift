@@ -17,6 +17,7 @@ protocol LocationServiceProtocol {
     var locationPublisher: AnyPublisher<CLLocation?, LocationError> { get }
 
     func start()
+    func stop()
 }
 
 final class LocationService: NSObject, LocationServiceProtocol {
@@ -36,6 +37,10 @@ final class LocationService: NSObject, LocationServiceProtocol {
     func start() {
         clLocationManager.requestWhenInUseAuthorization()
         clLocationManager.startMonitoringSignificantLocationChanges()
+    }
+
+    func stop() {
+        clLocationManager.stopUpdatingLocation()
     }
 }
 

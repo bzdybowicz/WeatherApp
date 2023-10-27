@@ -13,4 +13,5 @@ struct GeoResponseItem: Codable, Equatable {
     let lat: Double?
     let lon: Double?
     let name: String?
+    let country: String?
 }

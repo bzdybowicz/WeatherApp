@@ -10,20 +10,17 @@ import Foundation
 enum BackendEnvironment {
     case production
 
-    var baseUrlString: String {
+    var weatherUrlString: String {
         switch self {
         case .production:
             return "https://api.openweathermap.org/data/2.5/weather"
         }
     }
 
-    var remoteUrl: URL {
-        get throws {
-            if let url = URL(string: baseUrlString) {
-                return url
-            } else {
-                throw ServiceError.urlCreationFailure
-            }
+    var geoUrlString: String {
+        switch self {
+        case .production:
+            return "https://api.openweathermap.org/geo/1.0/direct"
         }
     }
 }

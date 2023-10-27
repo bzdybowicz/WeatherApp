@@ -16,10 +16,12 @@ final class CurrentWeatherViewModel: CurrentWeatherViewModelProtocol {
     let apiAlertTitle: String = L10n.CurrentWeather.KeyAlert.title
     let apiAlertDescription: String = L10n.CurrentWeather.KeyAlert.description
     let apiAlertOk: String = L10n.CurrentWeather.KeyAlert.confirmText
+    let selectLocationButtonText: String = L10n.CurrentWeather.CustomLocationButton.title
     @Published var temperature: String = ""
     @Published var errorMessage: String = ""
     @Published var apiKey: String = ""
     @Published var isAlertPresented: Bool = false
+    @Published var selectedGeoItem: GeoViewModelItem?
 
     private let locationService: LocationServiceProtocol
     private let weatherService: WeatherServiceProtocol
@@ -50,6 +52,7 @@ final class CurrentWeatherViewModel: CurrentWeatherViewModelProtocol {
         bindApiKey()
         bindLocation()
         bindLocale()
+        bindSelectedItem()
         restartAndBindTimer()
     }
 
@@ -68,6 +71,19 @@ private extension CurrentWeatherViewModel {
     private func bindApiKey() {
         apiKey = (try? apiKeyStorage.getKey()) ?? apiKey
         isAlertPresented = apiKey.isEmpty
+    }
+
+    private func bindSelectedItem() {
+        $selectedGeoItem
+            .sink(receiveValue: { [weak self] value in
+                guard let value else { return }
+                let location = value.location
+                self?.userSelectedLocation = location
+                self?.lastLocation = location
+                self?.locationService.stop()
+                self?.requestWeather(for: location)
+            })
+            .store(in: &cancellables)
     }
 
     private func bindLocation() {

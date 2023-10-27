@@ -10,6 +10,7 @@ import CoreLocation
 protocol CLLocationManagerProtocol {
     func requestWhenInUseAuthorization()
     func startMonitoringSignificantLocationChanges()
+    func stopUpdatingLocation()
 
     var desiredAccuracy: CLLocationAccuracy { get set }
     var delegate: CLLocationManagerDelegate? { get set }

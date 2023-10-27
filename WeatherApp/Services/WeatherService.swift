@@ -42,7 +42,7 @@ struct WeatherService: WeatherServiceProtocol {
     func fetchWeather(lat: Double,
                       lon: Double,
                       unit: String) async throws -> WeatherResponse {
-        var urlComponents = URLComponents(string: environment.baseUrlString)
+        var urlComponents = URLComponents(string: environment.weatherUrlString)
         guard let key = try? apiKeyStorage.getKey() else {
             throw ServiceError.noApiKey
         }
@@ -57,15 +57,18 @@ struct WeatherService: WeatherServiceProtocol {
     }
 
     func fetchGeoLocation(query: String) async throws -> GeoResponse {
-        var urlComponents = URLComponents(string: environment.baseUrlString)
+        var urlComponents = URLComponents(string: environment.geoUrlString)
         guard let key = try? apiKeyStorage.getKey() else {
             throw ServiceError.noApiKey
         }
-        urlComponents?.queryItems = [URLQueryItem(name: "q", value: query),
+        urlComponents?.queryItems = [URLQueryItem(name: "q", value: "{\(query)}"),
+                                     URLQueryItem(name: "limit", value: "5"),
                                      URLQueryItem(name: "appId", value: key),]
         guard let url = urlComponents?.url else { throw ServiceError.urlCreationFailure }
         let urlRequest = URLRequest(url: url)
         let response = try await urlSession.data(for: urlRequest)
+        let string = String(data: response.0, encoding: .utf8)
+        //print("STRING \(string)")
         return try decoder.decode(GeoResponse.self, from: response.0)
     }
 }

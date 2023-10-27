@@ -50,6 +50,6 @@ private extension LocationPickerViewModel {
 
     func handleResponse(geoResponse: GeoResponse?) {
         guard let geoResponse else { return }
-        results = geoResponse.compactMap { GeoViewModelItem(lat: $0.lat, lon: $0.lon, name: $0.name) }
+        results = geoResponse.compactMap { GeoViewModelItem(lat: $0.lat, lon: $0.lon, name: $0.name, country: $0.country) }
     }
 }

@@ -13,11 +13,15 @@ struct CurrentWeatherView<ViewModel: CurrentWeatherViewModelProtocol>: View {
     let viewModelFactory: ViewModelFactory
 
     var body: some View {
-        NavigationView {
+        NavigationStack {
             VStack(alignment: .center) {
-                NavigationLink(destination: LocationPickerView(viewModel: viewModelFactory.locationPickerViewModel())) {
-                    Text("Select location")
+                NavigationLink(destination: LocationPickerView(viewModel: viewModelFactory.locationPickerViewModel(),
+                                                               selectedItem: $viewModel.selectedGeoItem)) {
+                    Text(viewModel.selectLocationButtonText)
                 }
+                Spacer()
+                    .frame(height: 100)
+                Text(viewModel.selectedGeoItem?.name ?? "")
                 Spacer()
                     .frame(height: 100)
                 Text(viewModel.titleText).font(.title)
