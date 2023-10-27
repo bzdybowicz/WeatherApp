@@ -15,7 +15,7 @@ final class LocationServiceTests: XCTestCase {
     private var cancellables: Set<AnyCancellable> = []
 
     func testLocationPublisher() {
-        let locationPublisherStub = PassthroughSubject<CLLocation, Never>()
+        let locationPublisherStub = PassthroughSubject<CLLocation, Error>()
         let managerMock = CLLocationManagerMock(publisher: locationPublisherStub.eraseToAnyPublisher())
         let sut = LocationService(clLocationManager: managerMock)
         let inputData: [CLLocation] = [
@@ -26,8 +26,10 @@ final class LocationServiceTests: XCTestCase {
         var results: [CLLocation?] = []
         sut
             .locationPublisher
-            .sink(receiveValue: {
-                results.append($0)
+            .sink(receiveCompletion: { completion in
+                XCTFail("Unexpected completion")
+            }, receiveValue: { value in
+                results.append(value)
             })
             .store(in: &cancellables)
         sut.start()
@@ -35,6 +37,35 @@ final class LocationServiceTests: XCTestCase {
             locationPublisherStub.send(data)
         }
         XCTAssertEqual(results, inputData)
+        XCTAssertEqual(managerMock.requestAuthorizationCallsCount, 1)
+        XCTAssertEqual(managerMock.startUpdatingLocationCallsCount, 1)
+    }
+
+    func testLocationPublisherError() {
+        let locationPublisherStub = PassthroughSubject<CLLocation, Error>()
+        let managerMock = CLLocationManagerMock(publisher: locationPublisherStub.eraseToAnyPublisher())
+        let sut = LocationService(clLocationManager: managerMock)
+        let inputData: [CLLocation] = [
+            CLLocation(latitude: 30.3, longitude: 40.5),
+            CLLocation(latitude: 30.1, longitude: 40.1),
+            CLLocation(latitude: 30.3, longitude: 40.6)
+        ]
+        var results: [CLLocation?] = []
+        sut
+            .locationPublisher
+            .sink(receiveCompletion: { completion in
+                XCTFail("Unexpected completion")
+            }, receiveValue: { value in
+                results.append(value)
+            })
+            .store(in: &cancellables)
+        sut.start()
+        for data in inputData {
+            locationPublisherStub.send(data)
+        }
+        XCTAssertEqual(results, inputData)
+        XCTAssertEqual(managerMock.requestAuthorizationCallsCount, 1)
+        XCTAssertEqual(managerMock.startUpdatingLocationCallsCount, 1)
     }
 
 }

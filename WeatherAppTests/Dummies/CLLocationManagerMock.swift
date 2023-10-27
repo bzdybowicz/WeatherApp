@@ -17,11 +17,11 @@ final class CLLocationManagerMock: CLLocationManagerProtocol {
     var desiredAccuracy: CLLocationAccuracy = 0.0
     var delegate: CLLocationManagerDelegate?
 
-    private let publisher: AnyPublisher<CLLocation, Never>
+    private let publisher: AnyPublisher<CLLocation, Error>
     private var cancellables: Set<AnyCancellable> = []
     private let manager = CLLocationManager()
 
-    init(publisher: AnyPublisher<CLLocation, Never>) {
+    init(publisher: AnyPublisher<CLLocation, Error>) {
         self.publisher = publisher
     }
 
@@ -29,13 +29,21 @@ final class CLLocationManagerMock: CLLocationManagerProtocol {
         requestAuthorizationCallsCount += 1
     }
 
-    func startUpdatingLocation() {
+    func startMonitoringSignificantLocationChanges() {
         startUpdatingLocationCallsCount += 1
 
         publisher
-            .sink { [weak self] location in
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .failure(let error):
+                    self?.delegate?.locationManager?(CLLocationManager(), didFailWithError: error)
+                case .finished:
+                    break
+                }
+            }, receiveValue: { [weak self] location in
                 self?.delegate?.locationManager?(CLLocationManager(), didUpdateLocations: [location])
-            }
+            })
             .store(in: &cancellables)
     }
+
 }

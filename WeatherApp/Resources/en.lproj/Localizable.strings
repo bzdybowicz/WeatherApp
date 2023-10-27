@@ -9,4 +9,6 @@
 "currentWeather.title" = "Current temperature";
 "currentWeather.default.description" = "Presenting temperature for current user location";
 "currentWeather.customLocationButton.title" = "Select location";
-"currentWeather.networkError.message" = "Obtaining weather is temporarily not possible. Try again later.";
+"currentWeather.networkError.message" = "Cannot fetch weather. Try again later.";
+"currentWeather.locationError.message" = "Location cannot be obtained. Try again later.";
+"currentWeather.locationDisabled.message" = "You need to enable location services in system settings";

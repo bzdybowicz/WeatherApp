@@ -14,17 +14,17 @@ enum LocationError: Error {
 }
 
 protocol LocationServiceProtocol {
-    var locationPublisher: AnyPublisher<CLLocation?, Error> { get }
+    var locationPublisher: AnyPublisher<CLLocation?, LocationError> { get }
 
     func start()
 }
 
 final class LocationService: NSObject, LocationServiceProtocol {
-    var locationPublisher: AnyPublisher<CLLocation?, Error> {
+    var locationPublisher: AnyPublisher<CLLocation?, LocationError> {
         locationSubject.eraseToAnyPublisher()
     }
 
-    private let locationSubject = PassthroughSubject<CLLocation?, Error>()
+    private let locationSubject = PassthroughSubject<CLLocation?, LocationError>()
     private var clLocationManager: CLLocationManagerProtocol
 
     init(clLocationManager: CLLocationManagerProtocol) {

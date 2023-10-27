@@ -14,10 +14,11 @@ final class CurrentWeatherViewModel: CurrentWeatherViewModelProtocol {
 
     @Published var titleText: String = "currentWeather.title".localized
     @Published var temperature: String = ""
+    @Published var errorMessage: String = ""
 
     private let locationService: LocationServiceProtocol
     private let weatherService: WeatherServiceProtocol
-    private let measurementFormatter: MeasurementFormatter
+    private let measurementFormatter: MeasurementFormatterProtocol
     private let locale: LocaleProvider
     private let notificationCenter: NotificationCenter
 
@@ -30,7 +31,7 @@ final class CurrentWeatherViewModel: CurrentWeatherViewModelProtocol {
 
     init(locationService: LocationServiceProtocol,
          weatherService: WeatherServiceProtocol,
-         measurementFormatter: MeasurementFormatter,
+         measurementFormatter: MeasurementFormatterProtocol,
          notificationCenter: NotificationCenter = .default,
          locale: LocaleProvider = Locale.autoupdatingCurrent) {
         self.locationService = locationService
@@ -54,7 +55,7 @@ private extension CurrentWeatherViewModel {
                 case .finished:
                     break
                 case .failure(let error):
-                    self?.handleError(error: error)
+                    self?.handleLocationError(error: error)
                 }
             }, receiveValue: { [weak self] in
                 self?.handleNewLocation(location: $0)
@@ -88,8 +89,14 @@ private extension CurrentWeatherViewModel {
             })
     }
 
-    private func handleError(error: Error) {
-
+    private func handleLocationError(error: LocationError) {
+        switch error {
+        case .unknown:
+            errorMessage = "currentWeather.locationErrro.message".localized
+        case .userDeclined:
+            errorMessage = "currentWeather.locationDisabled.message".localized
+        }
+        temperature = "-"
     }
 
     private func handleNewLocation(location: CLLocation?) {
@@ -108,9 +115,14 @@ private extension CurrentWeatherViewModel {
         let unit = locale.measurementString
         currentTask?.cancel()
         currentTask = Task(operation: { [weak self] in
-            let weatherResponse = try await self?.weatherService.fetchWeather(lat: location.coordinate.latitude,
+            var weatherResponse: WeatherResponse?
+            do {
+                weatherResponse = try await self?.weatherService.fetchWeather(lat: location.coordinate.latitude,
                                                                               lon: location.coordinate.longitude,
                                                                               unit: unit)
+            } catch {
+                self?.handleServiceError()
+            }
             if Task.isCancelled {
                 return
             }
@@ -120,6 +132,11 @@ private extension CurrentWeatherViewModel {
             self?.restartAndBindTimer()
             self?.handleResponse(weatherResponse: weatherResponse, localeProvider: requestLocale)
         })
+    }
+
+    private func handleServiceError() {
+        temperature = "-"
+        errorMessage = "currentWeather.networkError.message".localized
     }
 
     private func handleResponse(weatherResponse: WeatherResponse?,

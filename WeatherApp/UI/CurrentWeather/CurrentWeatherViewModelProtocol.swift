@@ -11,4 +11,5 @@ import Foundation
 protocol CurrentWeatherViewModelProtocol: ObservableObject {
     var titleText: String { get }
     var temperature: String { get }
+    var errorMessage: String { get }
 }

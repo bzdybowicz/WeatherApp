@@ -14,7 +14,13 @@ struct CurrentWeatherView<ViewModel: CurrentWeatherViewModelProtocol>: View {
     var body: some View {
         VStack(alignment: .center) {
             Text(viewModel.titleText).font(.title)
+            Spacer().frame(height: 10)
             Text(viewModel.temperature).font(.largeTitle)
+            Spacer().frame(height: 24)
+            Text(viewModel.errorMessage)
+                .font(.title)
+                .multilineTextAlignment(.center)
+                .foregroundColor(.red)
         }
         .padding(EdgeInsets(top: 30, leading: 20, bottom: 30, trailing: 20))
     }
