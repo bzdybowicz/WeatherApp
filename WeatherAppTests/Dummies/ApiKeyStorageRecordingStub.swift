@@ -11,6 +11,7 @@ final class ApiKeyStorageRecordingStub: ApiKeyStorageProtocol {
 
     private (set) var recordedSaveKeys: [String] = []
     private (set) var recordedGetCallsCount: Int = 0
+    private (set) var deleteCallsCount: Int = 0
 
     private let key: String?
 
@@ -25,5 +26,9 @@ final class ApiKeyStorageRecordingStub: ApiKeyStorageProtocol {
     func getKey() -> String? {
         recordedGetCallsCount += 1
         return key
+    }
+
+    func deleteKey() {
+        deleteCallsCount += 1
     }
 }

@@ -103,7 +103,7 @@ final class CurrentWeatherViewModelTests: XCTestCase {
                                       notificationCenter: notificationCenter,
                                       locale: localeProvider)
         locationSubject.send(CLLocation(latitude: 30.3, longitude: 40.5))
-        let expectation = expectation(description: "Api calls are triggered")
+        let expectation = expectation(description: "Error message is updated")
         var values: [String] = []
         sut
             .$errorMessage
@@ -120,7 +120,7 @@ final class CurrentWeatherViewModelTests: XCTestCase {
     }
 
     func testLocationError() async {
-        let expectation = expectation(description: "Api calls are triggered")
+        let expectation = expectation(description: "Error message is updated")
         var values: [String] = []
         sut
             .$errorMessage
@@ -137,7 +137,7 @@ final class CurrentWeatherViewModelTests: XCTestCase {
     }
 
     func testLocationDisabledError() async {
-        let expectation = expectation(description: "Api calls are triggered")
+        let expectation = expectation(description: "Error message is updated")
         var values: [String] = []
         sut
             .$errorMessage
