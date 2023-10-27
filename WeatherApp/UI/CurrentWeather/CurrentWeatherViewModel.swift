@@ -143,7 +143,6 @@ private extension CurrentWeatherViewModel {
             do {
                 weatherResponse = try await self.weatherService.fetchWeather(lat: location.coordinate.latitude,
                                                                              lon: location.coordinate.longitude,
-                                                                             apiKey: self.apiKey,
                                                                              unit: unit)
             } catch {
                 self.handleServiceError()

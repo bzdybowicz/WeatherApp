@@ -30,13 +30,19 @@ struct WeatherAppUnits: App {
 struct WeatherAppApp: App {
 
     private let serviceFactory = ServiceFactory()
+    private let viewModelFactory: ViewModelFactory
+
+    init() {
+        self.viewModelFactory = ViewModelFactory(serviceFactory: serviceFactory)
+    }
 
     var body: some Scene {
         WindowGroup {
             CurrentWeatherView(viewModel: CurrentWeatherViewModel(locationService: serviceFactory.locationService,
                                                                   weatherService: serviceFactory.weatherService,
                                                                   measurementFormatter: MeasurementFormatter.formatter,
-                                                                  apiKeyStorage: ApiKeyStorage()))
+                                                                  apiKeyStorage: ApiKeyStorage()),
+                               viewModelFactory: viewModelFactory)
         }
     }
 }

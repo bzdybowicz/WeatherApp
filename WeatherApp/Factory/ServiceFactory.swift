@@ -15,7 +15,7 @@ struct ServiceFactory {
     }
 
     var weatherService: WeatherServiceProtocol {
-        WeatherService(urlSession: URLSession.shared, environment: .production, decoder: JSONDecoder())
+        WeatherService(urlSession: URLSession.shared, environment: .production, apiKeyStorage: ApiKeyStorage(), decoder: JSONDecoder())
     }
 
 }

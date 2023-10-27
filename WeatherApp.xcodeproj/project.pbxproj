@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7F205B0A2AEBDCF10048D4A9 /* LocationPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F205B092AEBDCF10048D4A9 /* LocationPickerView.swift */; };
+		7F205B0C2AEBFAD00048D4A9 /* GeoResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F205B0B2AEBFAD00048D4A9 /* GeoResponse.swift */; };
+		7F205B0E2AEBFC9A0048D4A9 /* LocationPickerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F205B0D2AEBFC9A0048D4A9 /* LocationPickerViewModel.swift */; };
+		7F205B122AEC01340048D4A9 /* ViewModelFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F205B112AEC01340048D4A9 /* ViewModelFactory.swift */; };
+		7F205B142AEC07D00048D4A9 /* GeoViewModelItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F205B132AEC07D00048D4A9 /* GeoViewModelItem.swift */; };
 		7F7A5F0A2AEB96E00046A4B0 /* LocaleProviderRecordingStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F7A5F092AEB96E00046A4B0 /* LocaleProviderRecordingStub.swift */; };
 		7F7A5F0C2AEB9A450046A4B0 /* KeychainStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F7A5F0B2AEB9A450046A4B0 /* KeychainStorage.swift */; };
 		7F7A5F112AEBB56D0046A4B0 /* Strings+Generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F7A5F102AEBB56D0046A4B0 /* Strings+Generated.swift */; };
@@ -62,6 +67,11 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		7F205B092AEBDCF10048D4A9 /* LocationPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationPickerView.swift; sourceTree = "<group>"; };
+		7F205B0B2AEBFAD00048D4A9 /* GeoResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoResponse.swift; sourceTree = "<group>"; };
+		7F205B0D2AEBFC9A0048D4A9 /* LocationPickerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationPickerViewModel.swift; sourceTree = "<group>"; };
+		7F205B112AEC01340048D4A9 /* ViewModelFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModelFactory.swift; sourceTree = "<group>"; };
+		7F205B132AEC07D00048D4A9 /* GeoViewModelItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoViewModelItem.swift; sourceTree = "<group>"; };
 		7F7A5F092AEB96E00046A4B0 /* LocaleProviderRecordingStub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocaleProviderRecordingStub.swift; sourceTree = "<group>"; };
 		7F7A5F0B2AEB9A450046A4B0 /* KeychainStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainStorage.swift; sourceTree = "<group>"; };
 		7F7A5F102AEBB56D0046A4B0 /* Strings+Generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Strings+Generated.swift"; sourceTree = SOURCE_ROOT; };
@@ -128,6 +138,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		7F205B062AEBDCCA0048D4A9 /* LocationPicker */ = {
+			isa = PBXGroup;
+			children = (
+				7F205B092AEBDCF10048D4A9 /* LocationPickerView.swift */,
+				7F205B0D2AEBFC9A0048D4A9 /* LocationPickerViewModel.swift */,
+				7F205B132AEC07D00048D4A9 /* GeoViewModelItem.swift */,
+			);
+			path = LocationPicker;
+			sourceTree = "<group>";
+		};
 		7F7A5F0F2AEBB5470046A4B0 /* Strings */ = {
 			isa = PBXGroup;
 			children = (
@@ -202,6 +222,7 @@
 		7FBB6EEE2AEA64CD005F0F43 /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				7F205B062AEBDCCA0048D4A9 /* LocationPicker */,
 				7F7A5F0F2AEBB5470046A4B0 /* Strings */,
 				7FBB6EF02AEA64DF005F0F43 /* CurrentWeather */,
 			);
@@ -259,6 +280,7 @@
 			children = (
 				7FBB6EFF2AEA8083005F0F43 /* WeatherResponse.swift */,
 				7FBB6F042AEA82C1005F0F43 /* BackendEnvironment.swift */,
+				7F205B0B2AEBFAD00048D4A9 /* GeoResponse.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -279,6 +301,7 @@
 			isa = PBXGroup;
 			children = (
 				7FBB6F1C2AEAB222005F0F43 /* ServiceFactory.swift */,
+				7F205B112AEC01340048D4A9 /* ViewModelFactory.swift */,
 			);
 			path = Factory;
 			sourceTree = "<group>";
@@ -449,17 +472,22 @@
 			buildActionMask = 2147483647;
 			files = (
 				7FBB6F072AEA83B0005F0F43 /* JSONDecoderProtocol.swift in Sources */,
+				7F205B0A2AEBDCF10048D4A9 /* LocationPickerView.swift in Sources */,
 				7F7A5F112AEBB56D0046A4B0 /* Strings+Generated.swift in Sources */,
 				7FBB6F142AEA939F005F0F43 /* CurrentWeatherViewModelProtocol.swift in Sources */,
 				7FBB6F052AEA82C1005F0F43 /* BackendEnvironment.swift in Sources */,
+				7F205B0C2AEBFAD00048D4A9 /* GeoResponse.swift in Sources */,
 				7FBB6F032AEA811C005F0F43 /* URLSessionProtocol.swift in Sources */,
+				7F205B142AEC07D00048D4A9 /* GeoViewModelItem.swift in Sources */,
 				7FBB6F222AEACA54005F0F43 /* String+Localized.swift in Sources */,
 				7FBB6F0F2AEA8F4A005F0F43 /* CurrentWeatherView.swift in Sources */,
+				7F205B0E2AEBFC9A0048D4A9 /* LocationPickerViewModel.swift in Sources */,
 				7FBB6F2C2AEAD0A2005F0F43 /* Locale+MeasurementSystemString.swift in Sources */,
 				7FBB6F392AEB913B005F0F43 /* MeasurementFormatterProtocol.swift in Sources */,
 				7FBB6F1D2AEAB222005F0F43 /* ServiceFactory.swift in Sources */,
 				7FBB6F302AEAD405005F0F43 /* MeasurementFormatter+Instance.swift in Sources */,
 				7FBB6EFD2AEA7F5D005F0F43 /* WeatherService.swift in Sources */,
+				7F205B122AEC01340048D4A9 /* ViewModelFactory.swift in Sources */,
 				7FBB6F2E2AEAD207005F0F43 /* LocaleProvider.swift in Sources */,
 				7FBB6F002AEA8083005F0F43 /* WeatherResponse.swift in Sources */,
 				7FBB6EF22AEA6504005F0F43 /* LocationService.swift in Sources */,
