@@ -43,6 +43,9 @@ struct CurrentWeatherView<ViewModel: CurrentWeatherViewModelProtocol>: View {
                 Text(viewModel.apiAlertDescription)
             }
             .padding(EdgeInsets(top: 30, leading: 20, bottom: 30, trailing: 20))
+            Button(viewModel.deleteKeyButtonText) {
+                viewModel.deleteApiKey()
+            }
         }
     }
 

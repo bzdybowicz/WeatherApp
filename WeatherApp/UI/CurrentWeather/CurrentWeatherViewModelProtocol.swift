@@ -20,8 +20,10 @@ protocol CurrentWeatherViewModelProtocol: ObservableObject {
 
     var isAlertPresented: Bool { get set }
     var apiKey: String { get set }
+    var deleteKeyButtonText: String { get }
 
     var selectedGeoItem: GeoViewModelItem? { get set }
 
     func apiKeyUpdatedAction()
+    func deleteApiKey()
 }

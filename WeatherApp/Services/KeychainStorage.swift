@@ -10,6 +10,7 @@ import Foundation
 protocol ApiKeyStorageProtocol {
     func saveApiKey(_ key: String) throws
     func getKey() throws -> String?
+    func deleteKey()
 }
 
 final class ApiKeyStorage: ApiKeyStorageProtocol {
@@ -47,5 +48,14 @@ final class ApiKeyStorage: ApiKeyStorageProtocol {
             assertionFailure("Fail to decode item, error: \(error)")
             return nil
         }
+    }
+
+    func deleteKey() {
+        let query: [CFString: Any] = [
+            kSecAttrService: "OpenWeatherKey",
+            kSecAttrAccount: "WeatherApp",
+            kSecClass: kSecClassGenericPassword
+        ]
+        SecItemDelete(query as CFDictionary)
     }
 }

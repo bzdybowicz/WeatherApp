@@ -24,6 +24,10 @@ internal enum L10n {
       /// Presenting temperature for current user location
       internal static let description = L10n.tr("Localizable", "currentWeather.default.description", fallback: "Presenting temperature for current user location")
     }
+    internal enum DeleteKeyButton {
+      /// Delete api key
+      internal static let text = L10n.tr("Localizable", "currentWeather.deleteKeyButton.text", fallback: "Delete api key")
+    }
     internal enum KeyAlert {
       /// Ok
       internal static let confirmText = L10n.tr("Localizable", "currentWeather.keyAlert.confirmText", fallback: "Ok")

@@ -17,6 +17,7 @@ final class CurrentWeatherViewModel: CurrentWeatherViewModelProtocol {
     let apiAlertDescription: String = L10n.CurrentWeather.KeyAlert.description
     let apiAlertOk: String = L10n.CurrentWeather.KeyAlert.confirmText
     let selectLocationButtonText: String = L10n.CurrentWeather.CustomLocationButton.title
+    let deleteKeyButtonText: String = L10n.CurrentWeather.DeleteKeyButton.text
     @Published var temperature: String = ""
     @Published var errorMessage: String = ""
     @Published var apiKey: String = ""
@@ -63,6 +64,12 @@ final class CurrentWeatherViewModel: CurrentWeatherViewModelProtocol {
                 try? apiKeyStorage.saveApiKey(apiKey)
             }
         }
+    }
+
+    func deleteApiKey() {
+        apiKey = ""
+        apiKeyStorage.deleteKey()
+        bindApiKey()
     }
 }
 
