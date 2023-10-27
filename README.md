@@ -18,7 +18,7 @@ Requirements comments:
 
 "The second screen (...)" - The search is there, works as expected. There is some visual glitch, that on 2nd entry, location picker view  search bar "blinks" for some reason. Interesting one, seems like some SwiftUI specific thing, I was not able to debug it quickly enough, so I decided to abandon it for now as not key detail.
 
-"The app has (...)" - networks errors are handled, data is refreshed every 1 minuted, unless unit changes, user's location changes or user selects location. Selecting location stops location manager.
+"The app has (...)" - networks errors are handled, data is refreshed every 1 minute, unless unit is changed (system settings - measurement system), user's location changes or user selects location. Manual selecting location stops location manager.
 
 "For implementation (...)" - I did some choices as specified in point 2. It does not mean that I would do the same ones for any other project. This was just suiting this task.
 
@@ -30,7 +30,7 @@ Requirements comments:
 
 "Test coverage" - as said above, it's not full on "testable" elements as it would just repeat similar concept on similar use cases, so I decided not to, but there are sync / async, viewModels and services tests. (TO DO: LocationPickerViewModel, fetchGeo method from WeatherService, KeychainService and some utils computed properties elsewhere)
 
-"Dark/Ligt (...)" - it mostly works by default.
+"Dark/Light (...)" - it mostly works by default.
 
 "Forecase react (...)" - it does, it also reacts on measurement change in system settings (uk, metric, us choice).
 
