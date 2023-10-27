@@ -182,7 +182,7 @@ private extension CurrentWeatherViewModel {
     private func handleResponse(weatherResponse: WeatherResponse?,
                                 localeProvider: LocaleProvider) {
         guard let weatherResponse else { return }
-
+        errorMessage = ""
         let value = weatherResponse.main?.temp
         let unit = localeProvider.temperatureUnit
         let measurement = Measurement(value: value ?? 0, unit: unit)

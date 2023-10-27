@@ -27,10 +27,10 @@ internal enum L10n {
     internal enum KeyAlert {
       /// Ok
       internal static let confirmText = L10n.tr("Localizable", "currentWeather.keyAlert.confirmText", fallback: "Ok")
-      /// It is inconvenient, but since this is secret, it is necessarily.
-      internal static let description = L10n.tr("Localizable", "currentWeather.keyAlert.description", fallback: "It is inconvenient, but since this is secret, it is necessarily.")
-      /// Enter your api key
-      internal static let title = L10n.tr("Localizable", "currentWeather.keyAlert.title", fallback: "Enter your api key")
+      /// It is inconvenient, but since this is secret, it is necessarily. Once it is done, you will not have to do it again.
+      internal static let description = L10n.tr("Localizable", "currentWeather.keyAlert.description", fallback: "It is inconvenient, but since this is secret, it is necessarily. Once it is done, you will not have to do it again.")
+      /// Enter your open weather api key
+      internal static let title = L10n.tr("Localizable", "currentWeather.keyAlert.title", fallback: "Enter your open weather api key")
     }
     internal enum LocationDisabled {
       /// You need to enable location services in system settings
@@ -43,6 +43,12 @@ internal enum L10n {
     internal enum NetworkError {
       /// Cannot fetch weather. Try again later.
       internal static let message = L10n.tr("Localizable", "currentWeather.networkError.message", fallback: "Cannot fetch weather. Try again later.")
+    }
+  }
+  internal enum LocationPicker {
+    internal enum NetworkError {
+      /// Cannot geolocate. Try again later.
+      internal static let message = L10n.tr("Localizable", "locationPicker.networkError.message", fallback: "Cannot geolocate. Try again later.")
     }
   }
 }

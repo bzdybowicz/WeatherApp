@@ -21,7 +21,7 @@ struct CurrentWeatherView<ViewModel: CurrentWeatherViewModelProtocol>: View {
                 }
                 Spacer()
                     .frame(height: 100)
-                Text(viewModel.selectedGeoItem?.name ?? "")
+                Text(viewModel.selectedGeoItem?.displayName ?? "")
                 Spacer()
                     .frame(height: 100)
                 Text(viewModel.titleText).font(.title)

@@ -16,3 +16,5 @@
 "currentWeather.keyAlert.title" = "Enter your open weather api key";
 "currentWeather.keyAlert.confirmText" = "Ok";
 "currentWeather.keyAlert.description" = "It is inconvenient, but since this is secret, it is necessarily. Once it is done, you will not have to do it again.";
+
+"locationPicker.networkError.message" = "Cannot geolocate. Try again later.";

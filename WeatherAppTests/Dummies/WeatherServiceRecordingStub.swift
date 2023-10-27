@@ -14,32 +14,36 @@ enum WeatherServiceTestError: Error {
 struct TestWeatherServiceInput: Equatable {
     let lat: Double
     let lon: Double
-    let apiKey: String
     let unit: String
 }
 
 final class WeatherServiceRecordingStub: WeatherServiceProtocol {
 
-    private (set) var recordedCalls: [TestWeatherServiceInput] = []
+    private (set) var weatherResponseInput: TestWeatherServiceInput?
+    private (set) var geoResponseInput: String?
 
-    private let responses: [WeatherResponse]
-    private var responseIterator = 0
+    private let weatherResponse: WeatherResponse?
+    private let geoResponse: GeoResponse?
 
-    init(responses: [WeatherResponse]) {
-        self.responses = responses
+    init(weatherResponse: WeatherResponse? = nil, geoLocationResponses: GeoResponse? = nil) {
+        self.weatherResponse = weatherResponse
+        self.geoResponse = geoLocationResponses
     }
 
-    func fetchWeather(lat: Double, lon: Double, apiKey: String, unit: String) async throws -> WeatherResponse {
-        recordedCalls.append(TestWeatherServiceInput(lat: lat, lon: lon, apiKey: apiKey, unit: unit))
-        if responses.isEmpty {
+    func fetchWeather(lat: Double, lon: Double, unit: String) async throws -> WeatherResponse {
+        weatherResponseInput = TestWeatherServiceInput(lat: lat, lon: lon, unit: unit)
+        guard let weatherResponse else {
             throw WeatherServiceTestError.testSampleError
         }
-        if responseIterator == responses.count {
-            responseIterator = 0
+        return weatherResponse
+    }
+
+    func fetchGeoLocation(query: String) async throws -> GeoResponse {
+        geoResponseInput = query
+        guard let geoResponse else {
+            throw WeatherServiceTestError.testSampleError
         }
-        let returnValue = responses[responseIterator]
-        responseIterator += 1
-        return returnValue
+        return geoResponse
     }
 
 }

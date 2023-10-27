@@ -16,7 +16,7 @@ final class WeatherServiceTests: XCTestCase {
 
     private lazy var response = WeatherResponse(coord: LocationResponse(lon: randomLongitude,
                                                                         lat: randomLatitude),
-                                                                        main: WeatherMainResponse(temp: randomTemp))
+                                                main: WeatherMainResponse(temp: randomTemp))
 
     private let randomLongitude = Double.random(in: -180...180)
     private let randomLatitude = Double.random(in: -90...90)
@@ -25,9 +25,12 @@ final class WeatherServiceTests: XCTestCase {
     func testFetchWeatherError() async throws {
         let sessionStub = URLSessionRecordingStub(error: TestError.sample)
         let decoderStub = JSONDecoderRecordingStub(decoded: response)
-        let sut = WeatherService(urlSession: sessionStub, environment: .production, decoder: decoderStub)
+        let sut = WeatherService(urlSession: sessionStub,
+                                 environment: .production,
+                                 apiKeyStorage: ApiKeyStorageRecordingStub(key: "key"),
+                                 decoder: decoderStub)
         do {
-            _ = try await sut.fetchWeather(lat: 10, lon: 10, apiKey: "key", unit: "metric")
+            _ = try await sut.fetchWeather(lat: 10, lon: 10, unit: "metric")
             XCTFail("Unexpected success")
         } catch let error {
             XCTAssertEqual(error as? TestError, TestError.sample)
@@ -39,10 +42,13 @@ final class WeatherServiceTests: XCTestCase {
     func testFetchWeatherSucces() async throws {
         let sessionStub = URLSessionRecordingStub(data: try JSONEncoder().encode(response))
         let decoderStub = JSONDecoderRecordingStub(decoded: response)
-        let sut = WeatherService(urlSession: sessionStub, environment: .production, decoder: decoderStub)
+        let sut = WeatherService(urlSession: sessionStub,
+                                 environment: .production,
+                                 apiKeyStorage: ApiKeyStorageRecordingStub(key: "key"),
+                                 decoder: decoderStub)
         var weatherResponse: WeatherResponse?
         do {
-            weatherResponse = try await sut.fetchWeather(lat: 10, lon: 10, apiKey: "key", unit: "metric")
+            weatherResponse = try await sut.fetchWeather(lat: 10, lon: 10, unit: "metric")
         } catch let error {
             XCTFail("Unexpected error \(error)")
         }

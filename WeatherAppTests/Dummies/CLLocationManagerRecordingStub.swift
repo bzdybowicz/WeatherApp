@@ -13,6 +13,7 @@ final class CLLocationManagerRecordingStub: CLLocationManagerProtocol {
 
     private (set) var requestAuthorizationCallsCount: Int = 0
     private (set) var startUpdatingLocationCallsCount: Int = 0
+    private (set) var stopUpdatingLocationCallsCount: Int = 0
 
     var desiredAccuracy: CLLocationAccuracy = 0.0
     var delegate: CLLocationManagerDelegate?
@@ -44,6 +45,10 @@ final class CLLocationManagerRecordingStub: CLLocationManagerProtocol {
                 self?.delegate?.locationManager?(CLLocationManager(), didUpdateLocations: [location])
             })
             .store(in: &cancellables)
+    }
+
+    func stopUpdatingLocation() {
+        stopUpdatingLocationCallsCount += 1
     }
 
 }

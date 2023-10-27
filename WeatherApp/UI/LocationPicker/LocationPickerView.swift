@@ -23,5 +23,9 @@ struct LocationPickerView<ViewModel: LocationPickerViewModelProtocol>: View {
             }
         }
         .searchable(text: $viewModel.searchText)
+        Text(viewModel.errorMessage)
+            .font(.title)
+            .multilineTextAlignment(.center)
+            .foregroundColor(.red)
     }
 }

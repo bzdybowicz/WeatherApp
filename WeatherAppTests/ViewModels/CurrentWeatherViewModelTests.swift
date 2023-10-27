@@ -29,12 +29,9 @@ final class CurrentWeatherViewModelTests: XCTestCase {
         cancellables.forEach { $0.cancel() }
         locationSubject = PassthroughSubject<CLLocation?, LocationError>()
         locationStub = LocationServiceRecordingStub(publisher: locationSubject.eraseToAnyPublisher())
-        weatherStub = WeatherServiceRecordingStub(responses: [
-            WeatherResponse(coord: LocationResponse(lon: 10, lat: 10),
-                            main: WeatherMainResponse(temp: 13)),
-            WeatherResponse(coord: LocationResponse(lon: 15, lat: 20),
-                            main: WeatherMainResponse(temp: 20))
-        ])
+        weatherStub = WeatherServiceRecordingStub(weatherResponse: WeatherResponse(coord: LocationResponse(lon: 10, lat: 10),
+                                                                                   main: WeatherMainResponse(temp: 13))
+        )
         measurementFormatterStub = MeasurementFormatterRecordingStub(returnValues: ["10", "20"])
         notificationCenter = NotificationCenter()
         apiKeyStub = ApiKeyStorageRecordingStub(key: "Key")
@@ -94,13 +91,11 @@ final class CurrentWeatherViewModelTests: XCTestCase {
 
         await fulfillment(of: [expectation], timeout: 1)
 
-        XCTAssertEqual(weatherStub.recordedCalls, [
-            TestWeatherServiceInput(lat: 30.3, lon: 40.5, apiKey: "Key", unit: "InputUnit"),
-        ])
+        XCTAssertEqual(weatherStub.weatherResponseInput, TestWeatherServiceInput(lat: 30.3, lon: 40.5, unit: "InputUnit"))
     }
 
     func testNetworkError() async {
-        let weatherServiceStub = WeatherServiceRecordingStub(responses: [])
+        let weatherServiceStub = WeatherServiceRecordingStub()
         sut = CurrentWeatherViewModel(locationService: locationStub,
                                       weatherService: weatherServiceStub,
                                       measurementFormatter: measurementFormatterStub,
