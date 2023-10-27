@@ -1,5 +1,5 @@
 //
-//  URLSessionMock.swift
+//  URLSessionRecordingStub.swift
 //  WeatherAppTests
 //
 //  Created by Bartlomiej Zdybowicz on 26/10/2023.
@@ -8,7 +8,7 @@
 import Foundation
 @testable import WeatherApp
 
-final class URLSessionMock: URLSessionProtocol {
+final class URLSessionRecordingStub: URLSessionProtocol {
 
     private let data: Data?
     private let urlResponse: URLResponse?

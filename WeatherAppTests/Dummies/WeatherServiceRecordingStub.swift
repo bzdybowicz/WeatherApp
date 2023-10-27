@@ -1,5 +1,5 @@
 //
-//  WeatherServiceMock.swift
+//  WeatherServiceRecordingStub.swift
 //  WeatherAppTests
 //
 //  Created by Bartlomiej Zdybowicz on 27/10/2023.
@@ -7,11 +7,11 @@
 
 @testable import WeatherApp
 
-enum WeatherServiceMockError: Error {
+enum WeatherServiceTestError: Error {
     case testSampleError
 }
 
-final class WeatherServiceMock: WeatherServiceProtocol {
+final class WeatherServiceRecordingStub: WeatherServiceProtocol {
 
     private (set) var recordedCalls: [(lat: Double, lon: Double, unit: String)] = []
 
@@ -24,7 +24,7 @@ final class WeatherServiceMock: WeatherServiceProtocol {
 
     func fetchWeather(lat: Double, lon: Double, unit: String) async throws -> WeatherResponse {
         if responses.isEmpty {
-            throw WeatherServiceMockError.testSampleError
+            throw WeatherServiceTestError.testSampleError
         }
         if responseIterator == responses.count {
             responseIterator = 0

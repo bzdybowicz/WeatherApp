@@ -1,5 +1,5 @@
 //
-//  MeasurementFormatterMock.swift
+//  MeasurementFormatterRecordingStub.swift
 //  WeatherAppTests
 //
 //  Created by Bartlomiej Zdybowicz on 27/10/2023.
@@ -8,7 +8,7 @@
 import Foundation
 @testable import WeatherApp
 
-final class MeasurementFormatterMock: MeasurementFormatterProtocol {
+final class MeasurementFormatterRecordingStub: MeasurementFormatterProtocol {
 
     private (set) var recordedMeasurements: [Measurement<Unit>] = []
 

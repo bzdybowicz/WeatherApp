@@ -1,5 +1,5 @@
 //
-//  CLLocationManagerMock.swift
+//  CLLocationManagerRecordingStub.swift
 //  WeatherAppTests
 //
 //  Created by Bartlomiej Zdybowicz on 26/10/2023.
@@ -9,7 +9,7 @@ import Combine
 import CoreLocation
 @testable import WeatherApp
 
-final class CLLocationManagerMock: CLLocationManagerProtocol {
+final class CLLocationManagerRecordingStub: CLLocationManagerProtocol {
 
     private (set) var requestAuthorizationCallsCount: Int = 0
     private (set) var startUpdatingLocationCallsCount: Int = 0

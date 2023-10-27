@@ -1,5 +1,5 @@
 //
-//  JSONDecoderMock.swift
+//  JSONDecoderRecordingStub.swift
 //  WeatherAppTests
 //
 //  Created by Bartlomiej Zdybowicz on 26/10/2023.
@@ -9,7 +9,7 @@ import Foundation
 @testable import WeatherApp
 import XCTest
 
-final class JSONDecoderMock: JSONDecoderProtocol {
+final class JSONDecoderRecordingStub: JSONDecoderProtocol {
 
     private let decoded: Decodable
 

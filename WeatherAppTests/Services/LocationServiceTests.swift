@@ -16,8 +16,8 @@ final class LocationServiceTests: XCTestCase {
 
     func testLocationPublisher() {
         let locationPublisherStub = PassthroughSubject<CLLocation, Error>()
-        let managerMock = CLLocationManagerMock(publisher: locationPublisherStub.eraseToAnyPublisher())
-        let sut = LocationService(clLocationManager: managerMock)
+        let managerStub = CLLocationManagerRecordingStub(publisher: locationPublisherStub.eraseToAnyPublisher())
+        let sut = LocationService(clLocationManager: managerStub)
         let inputData: [CLLocation] = [
             CLLocation(latitude: 30.3, longitude: 40.5),
             CLLocation(latitude: 30.1, longitude: 40.1),
@@ -37,14 +37,14 @@ final class LocationServiceTests: XCTestCase {
             locationPublisherStub.send(data)
         }
         XCTAssertEqual(results, inputData)
-        XCTAssertEqual(managerMock.requestAuthorizationCallsCount, 1)
-        XCTAssertEqual(managerMock.startUpdatingLocationCallsCount, 1)
+        XCTAssertEqual(managerStub.requestAuthorizationCallsCount, 1)
+        XCTAssertEqual(managerStub.startUpdatingLocationCallsCount, 1)
     }
 
     func testLocationPublisherError() {
         let locationPublisherStub = PassthroughSubject<CLLocation, Error>()
-        let managerMock = CLLocationManagerMock(publisher: locationPublisherStub.eraseToAnyPublisher())
-        let sut = LocationService(clLocationManager: managerMock)
+        let managerStub = CLLocationManagerRecordingStub(publisher: locationPublisherStub.eraseToAnyPublisher())
+        let sut = LocationService(clLocationManager: managerStub)
         let inputData: [CLLocation] = [
             CLLocation(latitude: 30.3, longitude: 40.5),
             CLLocation(latitude: 30.1, longitude: 40.1),
@@ -64,8 +64,8 @@ final class LocationServiceTests: XCTestCase {
             locationPublisherStub.send(data)
         }
         XCTAssertEqual(results, inputData)
-        XCTAssertEqual(managerMock.requestAuthorizationCallsCount, 1)
-        XCTAssertEqual(managerMock.startUpdatingLocationCallsCount, 1)
+        XCTAssertEqual(managerStub.requestAuthorizationCallsCount, 1)
+        XCTAssertEqual(managerStub.startUpdatingLocationCallsCount, 1)
     }
 
 }

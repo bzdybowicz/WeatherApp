@@ -1,5 +1,5 @@
 //
-//  LocationServiceMock.swift
+//  LocationServiceRecordingStub.swift
 //  WeatherAppTests
 //
 //  Created by Bartlomiej Zdybowicz on 27/10/2023.
@@ -9,7 +9,7 @@ import Combine
 import CoreLocation
 @testable import WeatherApp
 
-final class LocationServiceMock: LocationServiceProtocol {
+final class LocationServiceRecordingStub: LocationServiceProtocol {
 
     let locationPublisher: AnyPublisher<CLLocation?, LocationError>
 

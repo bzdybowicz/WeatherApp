@@ -23,23 +23,23 @@ final class WeatherServiceTests: XCTestCase {
     private let randomTemp = Double.random(in: -237.15...100)
 
     func testFetchWeatherError() async throws {
-        let sessionMock = URLSessionMock(error: TestError.sample)
-        let decoderMock = JSONDecoderMock(decoded: response)
-        let sut = WeatherService(urlSession: sessionMock, environment: .production, decoder: decoderMock)
+        let sessionStub = URLSessionRecordingStub(error: TestError.sample)
+        let decoderStub = JSONDecoderRecordingStub(decoded: response)
+        let sut = WeatherService(urlSession: sessionStub, environment: .production, decoder: decoderStub)
         do {
             _ = try await sut.fetchWeather(lat: 10, lon: 10, unit: "metric")
             XCTFail("Unexpected success")
         } catch let error {
             XCTAssertEqual(error as? TestError, TestError.sample)
         }
-        XCTAssertEqual(sessionMock.recordedRequest?.url?.absoluteString, "https://api.openweathermap.org/data/2.5/weather?lat=10.0&lon=10.0&appId=6654cf8df59efce3c4f7638b8587a72e&units=metric")
-        XCTAssertEqual(decoderMock.recordedData, nil)
+        XCTAssertEqual(sessionStub.recordedRequest?.url?.absoluteString, "https://api.openweathermap.org/data/2.5/weather?lat=10.0&lon=10.0&appId=6654cf8df59efce3c4f7638b8587a72e&units=metric")
+        XCTAssertEqual(decoderStub.recordedData, nil)
     }
 
     func testFetchWeatherSucces() async throws {
-        let sessionMock = URLSessionMock(data: try JSONEncoder().encode(response))
-        let decoderMock = JSONDecoderMock(decoded: response)
-        let sut = WeatherService(urlSession: sessionMock, environment: .production, decoder: decoderMock)
+        let sessionStub = URLSessionRecordingStub(data: try JSONEncoder().encode(response))
+        let decoderStub = JSONDecoderRecordingStub(decoded: response)
+        let sut = WeatherService(urlSession: sessionStub, environment: .production, decoder: decoderStub)
         var weatherResponse: WeatherResponse?
         do {
             weatherResponse = try await sut.fetchWeather(lat: 10, lon: 10, unit: "metric")
@@ -47,8 +47,8 @@ final class WeatherServiceTests: XCTestCase {
             XCTFail("Unexpected error \(error)")
         }
         XCTAssertEqual(weatherResponse, response)
-        XCTAssertEqual(sessionMock.recordedRequest?.url?.absoluteString, "https://api.openweathermap.org/data/2.5/weather?lat=10.0&lon=10.0&appId=6654cf8df59efce3c4f7638b8587a72e&units=metric")
-        XCTAssertEqual(decoderMock.recordedData, try JSONEncoder().encode(response))
+        XCTAssertEqual(sessionStub.recordedRequest?.url?.absoluteString, "https://api.openweathermap.org/data/2.5/weather?lat=10.0&lon=10.0&appId=6654cf8df59efce3c4f7638b8587a72e&units=metric")
+        XCTAssertEqual(decoderStub.recordedData, try JSONEncoder().encode(response))
     }
 
 }

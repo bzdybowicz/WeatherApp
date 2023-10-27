@@ -10,3 +10,5 @@ import Foundation
 protocol MeasurementFormatterProtocol {
     func string(from measurement: Measurement<Unit>) -> String
 }
+
+extension MeasurementFormatter: MeasurementFormatterProtocol {}
